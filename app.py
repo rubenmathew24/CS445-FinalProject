@@ -9,7 +9,7 @@ def main():
     original_image = normalize.load_image(IMAGE)
     
 	# Normalize Image
-    bbox, warped = normalize.normalize(original_image)
+    bbox, warped = normalize.normalize(IMAGE)
     
 	# Apply OCR
     

@@ -93,5 +93,5 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 
 
 # Testing code
-FILE_NAME = 'images/test_pokemon.JPG'
-process_card_image(FILE_NAME)
+# FILE_NAME = 'images/test_pokemon.JPG'
+# normalize(FILE_NAME)
