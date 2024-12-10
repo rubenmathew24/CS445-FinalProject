@@ -20,6 +20,9 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 
 	contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+	# Save preprocessed image
+	# cv2.imwrite('output/preprocessed.jpg', edges)
+
 	# Find the largest rectangular contour
 	largest_contour = None
 	max_area = 0
@@ -92,6 +95,6 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	return [image_with_bbox, warped]
 
 
-# Testing code
+# # Testing code
 # FILE_NAME = 'images/test_pokemon.JPG'
 # normalize(FILE_NAME)
