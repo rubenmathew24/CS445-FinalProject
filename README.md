@@ -21,4 +21,6 @@ This project uses a picture of a Magic The Gathering card and gives the user the
 
 2. Change the IMAGE variable to the path of the image you want to check
 
-3. Run app.py
+3. Change the USE_GPU variable to true if you want easyocr to use your gpu
+
+4. Run app.py

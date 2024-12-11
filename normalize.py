@@ -18,18 +18,19 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	blurred = cv2.GaussianBlur(grey, (5, 5), 0)
 	edges = cv2.Canny(blurred, 30, 100)
 
-	# Clean up the edges
+	# Clean up the edges (GPT proposed using dilate/erode methods)
 	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-	edges = cv2.dilate(edges, kernel, iterations=1)
-	edges = cv2.erode(edges, kernel, iterations=1)
+	edges = cv2.dilate(edges, kernel, iterations=3)
+	edges = cv2.erode(edges, kernel, iterations=2)
 
 	contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+	# Save Image of Contours Drawn
 	debug = image.copy()
 	cv2.imwrite('debug/contours.jpg', cv2.drawContours(debug, contours, -1, (0,255,0), 3))
 
 	# Save preprocessed image
-	cv2.imwrite('debug/preprocessed.jpg', edges)
+	# cv2.imwrite('debug/preprocessed.jpg', edges)
 
 	# Find the largest rectangular contour
 	largest_contour = None
@@ -39,7 +40,7 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 		if area > max_area:
 			# Approximate contour
 			perimeter = cv2.arcLength(contour, True)
-			approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
+			approx = cv2.approxPolyDP(contour, 0.05 * perimeter, True)
 			if len(approx) == 4: # Should have 4 sides for a card
 				largest_contour = approx
 				max_area = area
@@ -83,19 +84,8 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	M = cv2.getPerspectiveTransform(rect, dst)
 	warped = cv2.warpPerspective(image, M, (max_width, max_height))
 
-	# Re calibrate coordinates of rect to be "portrait"
-	# Do this to make bounding box easier to see and not blend with card
+	# Bounding box
 	image_with_bbox = image.copy()
-	x_vals = list(map(lambda x: x[0], rect.astype(int)))
-	y_vals = list(map(lambda x: x[1], rect.astype(int)))
-	portrait = [(min(x_vals), max(y_vals)), (max(x_vals), max(y_vals)), (max(x_vals), min(y_vals)), (min(x_vals), min(y_vals))]
-	
-	# # Draw bounding box
-	# cv2.line(image_with_bbox, tuple(portrait[0]), tuple(portrait[1]), (0, 255, 0), 3)
-	# cv2.line(image_with_bbox, tuple(portrait[1]), tuple(portrait[2]), (0, 255, 0), 3)
-	# cv2.line(image_with_bbox, tuple(portrait[2]), tuple(portrait[3]), (0, 255, 0), 3)
-	# cv2.line(image_with_bbox, tuple(portrait[3]), tuple(portrait[0]), (0, 255, 0), 3)
-
 	rect = rect.astype(int)
 
 	cv2.line(image_with_bbox, tuple(rect[0]), tuple(rect[1]), (0, 255, 0), 3)
@@ -106,12 +96,11 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	# Save the images
 	cv2.imwrite(output_path_with_bbox, image_with_bbox)
 	cv2.imwrite(output_path_card_warped, warped)
-
-	print(f"Images saved:\n1. Portrait Bounding Box: {output_path_with_bbox}\n2. Warped Card: {output_path_card_warped}")
+	# print("Images Saved")
 
 	return [image_with_bbox, warped]
 
 
 # # Testing code
-# FILE_NAME = 'images/test_pokemon.JPG
+# FILE_NAME = ''
 # normalize(FILE_NAME)
