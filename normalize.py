@@ -16,12 +16,20 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	# Pre process image
 	grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(grey, (5, 5), 0)
-	edges = cv2.Canny(blurred, 50, 150)
+	edges = cv2.Canny(blurred, 30, 100)
+
+	# Clean up the edges
+	kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+	edges = cv2.dilate(edges, kernel, iterations=1)
+	edges = cv2.erode(edges, kernel, iterations=1)
 
 	contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+	debug = image.copy()
+	cv2.imwrite('debug/contours.jpg', cv2.drawContours(debug, contours, -1, (0,255,0), 3))
+
 	# Save preprocessed image
-	# cv2.imwrite('output/preprocessed.jpg', edges)
+	cv2.imwrite('debug/preprocessed.jpg', edges)
 
 	# Find the largest rectangular contour
 	largest_contour = None
@@ -39,6 +47,8 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	if largest_contour is None:
 		raise ValueError("no card")
 
+
+	# print(largest_contour)
 
 	pts = largest_contour.reshape(4, 2)
 	rect = np.zeros((4, 2), dtype="float32")
@@ -80,11 +90,18 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 	y_vals = list(map(lambda x: x[1], rect.astype(int)))
 	portrait = [(min(x_vals), max(y_vals)), (max(x_vals), max(y_vals)), (max(x_vals), min(y_vals)), (min(x_vals), min(y_vals))]
 	
-	# Draw bounding box
-	cv2.line(image_with_bbox, tuple(portrait[0]), tuple(portrait[1]), (0, 255, 0), 3)
-	cv2.line(image_with_bbox, tuple(portrait[1]), tuple(portrait[2]), (0, 255, 0), 3)
-	cv2.line(image_with_bbox, tuple(portrait[2]), tuple(portrait[3]), (0, 255, 0), 3)
-	cv2.line(image_with_bbox, tuple(portrait[3]), tuple(portrait[0]), (0, 255, 0), 3)
+	# # Draw bounding box
+	# cv2.line(image_with_bbox, tuple(portrait[0]), tuple(portrait[1]), (0, 255, 0), 3)
+	# cv2.line(image_with_bbox, tuple(portrait[1]), tuple(portrait[2]), (0, 255, 0), 3)
+	# cv2.line(image_with_bbox, tuple(portrait[2]), tuple(portrait[3]), (0, 255, 0), 3)
+	# cv2.line(image_with_bbox, tuple(portrait[3]), tuple(portrait[0]), (0, 255, 0), 3)
+
+	rect = rect.astype(int)
+
+	cv2.line(image_with_bbox, tuple(rect[0]), tuple(rect[1]), (0, 255, 0), 3)
+	cv2.line(image_with_bbox, tuple(rect[1]), tuple(rect[2]), (0, 255, 0), 3)
+	cv2.line(image_with_bbox, tuple(rect[2]), tuple(rect[3]), (0, 255, 0), 3)
+	cv2.line(image_with_bbox, tuple(rect[3]), tuple(rect[0]), (0, 255, 0), 3)
 
 	# Save the images
 	cv2.imwrite(output_path_with_bbox, image_with_bbox)
@@ -96,5 +113,5 @@ def normalize(image_path, output_path_with_bbox = "output/card_with_bbox.jpg", o
 
 
 # # Testing code
-# FILE_NAME = 'images/test_pokemon.JPG'
+# FILE_NAME = 'images/test_pokemon.JPG
 # normalize(FILE_NAME)
