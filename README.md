@@ -1,8 +1,8 @@
 # CS445-FinalProject
- 
+
 This project uses a picture of a Magic The Gathering card and gives the user the value of teh card.
 
-## Our Process:
+## Our Process
 
 1. We start by detecting where the card is in the image and isolating it. We warp the image to put it in "portrait mode". This makes the next steps easier to perform.
 
@@ -14,13 +14,14 @@ This project uses a picture of a Magic The Gathering card and gives the user the
 
 5. Return the value of the most similar card
 
+## How to use
 
-## How to use:
+Run the main.py file with the image you want to analyze as an argument. It will print the detected card, and it's currrent value in USD.
 
-1. Go into app.py
+For example:
 
-2. Change the IMAGE variable to the path of the image you want to check
-
-3. Change the USE_GPU variable to true if you want easyocr to use your gpu
-
-4. Run app.py
+```console
+  foo@bar:~$ python main.py test.jpg
+  Card:  Servant of the Conduit (KLD) 169
+  Value: $0.04
+```

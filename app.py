@@ -2,8 +2,7 @@ import normalize
 import ocr
 import matching
 from tqdm import tqdm
-
-IMAGE = "images/IMG_2348.jpg"
+import sys
 
 # Off by Default
 USE_GPU = False
@@ -26,7 +25,7 @@ TESTS = {
 }
 
 
-def main(testing=False):
+def main(IMAGE="images/IMG_2348.jpg"):
 
     # Load Image
     original_image = normalize.load_image(IMAGE)
@@ -56,9 +55,7 @@ def batch_testing():
     failed = []
 
     for name, file in tqdm(TESTS.items(), desc="Testing", leave=False):
-        global IMAGE
-        IMAGE = 'images/' + file
-        computed, value = main()
+        computed, value = main(f'images /{file}')
 
         try:
             assert name == computed
@@ -78,5 +75,10 @@ def batch_testing():
 
 
 if __name__ == "__main__":
-    main()
-    # batch_testing()
+    args = sys.argv[1:]
+    if len(args) > 0:
+        card, value = main(args[0])
+        print(f"Card:  {card}")
+        print(f"Value: ${value}")
+    else:
+        batch_testing()
