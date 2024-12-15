@@ -7,9 +7,6 @@ import sys
 # Off by Default
 USE_GPU = False
 
-# Batch Testing
-PERFORM_TESTING = False
-
 TESTS = {
     "Cloud Elemental (M11) 50": 'Blue.JPG',
     "Flesh to Dust (M15) 98": 'Black.JPG',

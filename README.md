@@ -16,7 +16,16 @@ This project uses a picture of a Magic The Gathering card and gives the user the
 
 ## How to use
 
-Run the main.py file with the image you want to analyze as an argument. It will print the detected card, and it's currrent value in USD.
+### Use GPU
+GPU usage for the easyocr package is turned off unless manually turned on. You can go into app.py and manually flip the variable to USE_GPU to enable it.
+
+### Ways of running
+
+We have two ways of running the program. 
+
+
+#### Single File
+Run the app.py file with the image you want to analyze as an argument. It will print the detected card, and it's currrent value in USD.
 
 For example:
 
@@ -26,14 +35,6 @@ For example:
   Value: $0.04
 ```
 
-### Testing
+#### Batch Testing
+Running app.py without an argument will use the TESTS dictionary defined in the file. Use this to test the accuracy of the program.
 
-1. Go into app.py
-
-2. Make sure the TESTS dictionary has all the tests you want where:
-  a. Key: Expected Print Name
-  b. Value: File name of image in images folder
-
-3. Change the USE_GPU variable to true if you want easyocr to use your gpu
-
-4. Run app.py without any arguments
