@@ -37,11 +37,12 @@ def score_pair(im1, im2):
     # show images
     # plt.figure()
     # plt.subplot(1, 3, 1)
-    # plt.imshow(im2)
+    # plt.imshow(cv2.cvtColor(im1, cv2.COLOR_BGR2RGB))
     # plt.subplot(1, 3, 2)
-    # plt.imshow(im1)
+    # plt.imshow(cv2.cvtColor(im2, cv2.COLOR_BGR2RGB))
     # plt.subplot(1, 3, 3)
-    # plt.imshow(im1_aligned)
+    # merged = cv2.addWeighted(im1_aligned, 0.5, im2, 0.5, 0)
+    # plt.imshow(cv2.cvtColor(merged, cv2.COLOR_BGR2RGB))
     # plt.show()
 
     # calculate score
@@ -70,4 +71,8 @@ def match_printing(warped, name):
             max_score = score
             best_match = printing
 
-    return f'{best_match["name"]} ({best_match["set"].upper()}) {best_match["collector_number"]}'
+    return f'{best_match["name"]} ({best_match["set"].upper()}) {best_match["collector_number"]}', printing['id']
+
+
+def get_card_value(printing_id):
+    return requests.get(f'https://api.scryfall.com/cards/{printing_id}').json()['prices']['usd']

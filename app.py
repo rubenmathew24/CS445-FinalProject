@@ -26,7 +26,7 @@ TESTS = {
 }
 
 
-def main():
+def main(testing=False):
 
     # Load Image
     original_image = normalize.load_image(IMAGE)
@@ -41,11 +41,12 @@ def main():
     name = matching.find_closest_match(name)
 
     # Apply Similarity Search
-    printing = matching.match_printing(warped, name)
+    printing, scryfall_id = matching.match_printing(warped, name)
 
     # Return value of Card
+    value = matching.get_card_value(scryfall_id)
 
-    return printing
+    return printing, value
 
 
 def batch_testing():
@@ -57,7 +58,7 @@ def batch_testing():
     for name, file in tqdm(TESTS.items(), desc="Testing", leave=False):
         global IMAGE
         IMAGE = 'images/' + file
-        computed = main()
+        computed, value = main()
 
         try:
             assert name == computed
@@ -77,5 +78,5 @@ def batch_testing():
 
 
 if __name__ == "__main__":
-    # main()
-    batch_testing()
+    main()
+    # batch_testing()
