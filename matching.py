@@ -9,6 +9,25 @@ def find_closest_match(name):
     return requests.get(f'https://api.scryfall.com/cards/named?fuzzy={name}').json()['name']
 
 
+def score_aligned(im1, im2):
+    score = 0
+    score += cv2.matchTemplate(im1, im2, cv2.TM_CCOEFF_NORMED)[0][0]
+
+    # bonus for matching set symbol
+    symbol_location = (int(im2.shape[0] * .86), int(im2.shape[1] * .57))
+    symbol_size = (int(im2.shape[0] * .06), int(im2.shape[1] * .04))
+
+    im1_symbol = im1[symbol_location[0]:symbol_location[0] +
+                     symbol_size[0], symbol_location[1]:symbol_location[1] + symbol_size[1]]
+    im2_symbol = im2[symbol_location[0]:symbol_location[0] +
+                     symbol_size[0], symbol_location[1]:symbol_location[1] + symbol_size[1]]
+
+    score += cv2.matchTemplate(im1_symbol, im2_symbol,
+                               cv2.TM_CCOEFF_NORMED)[0][0] * 0.2
+
+    return score
+
+
 def score_pair(im1, im2):
     # align images
     im1 = cv2.resize(im1, (im2.shape[1] - 50, im2.shape[0] - 50))
@@ -26,8 +45,7 @@ def score_pair(im1, im2):
     # plt.show()
 
     # calculate score
-    cc = cv2.matchTemplate(im1_aligned, im2, cv2.TM_CCORR_NORMED)
-    return cc[0][0]
+    return score_aligned(im1_aligned, im2)
 
 
 def match_printing(warped, name):
