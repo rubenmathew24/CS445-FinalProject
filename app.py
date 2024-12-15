@@ -25,7 +25,7 @@ TESTS = {
 }
 
 
-def main(IMAGE="images/IMG_2348.jpg"):
+def main(IMAGE):
 
     # Load Image
     original_image = normalize.load_image(IMAGE)
@@ -55,7 +55,7 @@ def batch_testing():
     failed = []
 
     for name, file in tqdm(TESTS.items(), desc="Testing", leave=False):
-        computed, value = main(f'images /{file}')
+        computed, value = main(f'tests/{file}')
 
         try:
             assert name == computed
