@@ -3,10 +3,13 @@ import ocr
 import matching
 from tqdm import tqdm
 
-IMAGE = "images/IMG_2348.jpg"
+IMAGE = "images/Red.jpg"
 
 # Off by Default
 USE_GPU = False
+
+# Batch Testing
+PERFORM_TESTING = False
 
 TESTS = {
     "Cloud Elemental (M11) 50": 'Blue.JPG',
@@ -78,5 +81,7 @@ def batch_testing():
 
 
 if __name__ == "__main__":
-    main()
-    # batch_testing()
+    if PERFORM_TESTING: batch_testing()
+    else:
+        name, val = main()
+        print(name + " which is worth $" + val)

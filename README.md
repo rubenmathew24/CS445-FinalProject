@@ -1,6 +1,6 @@
 # CS445-FinalProject
  
-This project uses a picture of a Magic The Gathering card and gives the user the value of teh card.
+This project uses a picture of a Magic The Gathering card and gives the user the value of the card.
 
 ## Our Process:
 
@@ -17,10 +17,28 @@ This project uses a picture of a Magic The Gathering card and gives the user the
 
 ## How to use:
 
+### Use Application:
+
 1. Go into app.py
 
-2. Change the IMAGE variable to the path of the image you want to check
+2. Make sure PERFORM_TESTING variable is set to False
 
-3. Change the USE_GPU variable to true if you want easyocr to use your gpu
+3. Change the IMAGE variable to the path of the image you want to check
 
-4. Run app.py
+4. Change the USE_GPU variable to true if you want easyocr to use your gpu
+
+5. Run app.py
+
+### Testing:
+
+1. Go into app.py
+
+2. Make sure PERFORM_TESTING variable is set to True
+
+3. Make sure the TESTS dictionary has all the tests you want where:
+	1. Key: Expected Print Name
+	2. Value: File name of image in images folder
+
+4. Change the USE_GPU variable to true if you want easyocr to use your gpu
+
+5. Run app.py
